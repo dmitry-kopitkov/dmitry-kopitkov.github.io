@@ -19,21 +19,24 @@ My current research interests lay within different theoretical and practical asp
 
 
 
+$\newcommand{\RR}{\mathbb{R}}$
+$\newcommand{\usuff}{\scriptscriptstyle U}$
+$\newcommand{\dsuff}{\scriptscriptstyle D}$
+$\newcommand{\probi}[2]{\mathbb{P}^{#1}({#2})}$
+$\newcommand{\udata}{\\{X_i^{\usuff}\\}\_{i = 1}^{N^{\usuff}}}$
+$\newcommand{\ddata}{\\{X_i^{\dsuff}\\}\_{i = 1}^{N^{\dsuff}}}$
+
+
+
 ## General Probabilistic Surface Optimization
 <!--- ====== -->
-I graduated with my Ph.D. in probabilistic model estimation, with a dissertation titled "General Probabilistic Surface Optimization". This work focuses on probabilistic estimation tasks based on energy contrast equilibrium, providing a framework for constructing an infinite number of objective functions to learn various valuable probabilistic target functions (e.g. probability density of data). It can be further viewed as a generalization of many existing statistical objective functions such as cross entropy and noise contrastive estimation, and provides a geometrical perspective on a typical optimization task. 
+I graduated with my Ph.D. in probabilistic model estimation, with a dissertation titled "General Probabilistic Surface Optimization". This work focuses on probabilistic estimation tasks based on energy contrast equilibrium, providing a framework for constructing an infinite number of objective functions to learn various valuable probabilistic target functions (e.g. probability density of data). It can be further viewed as a generalization of many existing statistical objective functions such as cross entropy and noise contrastive estimation, and provides an intuitive geometrical perspective on a typical optimization task. 
 
 <p align="center">
 <img src="/images/pso_illustr.png" width="700" />
 </p>
 
-
-$\newcommand{\RR}{\mathbb{R}}$
-$\newcommand{\usuff}{\scriptscriptstyle U}$
-$\newcommand{\dsuff}{\scriptscriptstyle D}$
-$\newcommand{\probi}[2]{\mathbb{P}^{#1}({#2})}$
-
-Illustration of PSO principles. Model $f_{\theta}(X): \RR^{n} \rightarrow \mathbb{R}$ (e.g. a neural network, NN, parametrized by $\theta$) represents a virtual surface that is pushed in opposite directions - *up* at points {$X_i^{\usuff}$}<sub>$i$</sub> sampled from $\probi{\usuff}{X}$ and *down* at points {$X_i^{\dsuff}$}<sub>$i$</sub> sampled from $\probi{\dsuff}{X}$. Magnitude of each push is amplified by analytical function - $M^{\usuff}\left[X,f_{\theta}(X)\right]$ when pushing at $X_i^{\usuff}$ and $M^{\dsuff}\left[X,f_{\theta}(X)\right]$ when pushing at $X_i^{\dsuff}$, where both functions may have an almost arbitrary form, with only minor restrictions. During an iterative optimization $\theta_{t+1} = \theta_{t} - \delta \cdot d\theta$ via PSO loss gradient:
+Illustration of PSO principles: model $f_{\theta}(X): \RR^{n} \rightarrow \mathbb{R}$ (e.g. a neural network, NN, parametrized by $\theta$ or a kernel model) represents a virtual surface that is pushed in opposite directions - *up* at points $\udata$ sampled from density $\probi{\usuff}{X}$ and *down* at points $\ddata$ sampled from density $\probi{\dsuff}{X}$. Magnitude of each push is amplified by analytical function - $M^{\usuff}\left[X,f_{\theta}(X)\right]$ when pushing at $X_i^{\usuff}$ and $M^{\dsuff}\left[X,f_{\theta}(X)\right]$ when pushing at $X_i^{\dsuff}$, where both functions may have an almost arbitrary form, with only minor restrictions. During an iterative optimization $\theta_{t+1} = \theta_{t} - \delta \cdot d\theta$ via PSO loss gradient:
 
 <p align="center">
 $d\theta
@@ -57,14 +60,29 @@ X^{\dsuff}_{i},
 f_{\theta}(X^{\dsuff}_{i})
 \right]
 \cdot
-\nabla_{\theta} f_{\theta}(X^{\dsuff}_{i}),$
+\nabla_{\theta} f_{\theta}(X^{\dsuff}_{i})$
+,
 </p>
 
-the *up* and *down* forces $F_{\theta}^{\usuff}(X) = 
+the *up* and *down* pointwise forces $F_{\theta}^{\usuff}(X) = 
 		\probi{\usuff}{X} \cdot 
 		M^{\usuff}\left[X,f_{\theta}(X)\right]$ and $F_{\theta}^{\dsuff}(X) = 
 		\probi{\dsuff}{X} \cdot 
-		M^{\dsuff}\left[X,f_{\theta}(X)\right]$, containing both frequency and analytical components, adapt to each other till the point-wise *balance state* $F_{\theta}^{\usuff}(X) = F_{\theta}^{\dsuff}(X)$ is achieved. Such convergence causes the final model $f_{\theta}(X)$ to be a specific function of $\probi{\usuff}{X}$ and $\probi{\dsuff}{X}$, and can be used for inferring numerous statistical functions of arbitrary data. Particularly, PSO delivers exact tools to control *magnitude* functions $M^{\usuff}$ and $M^{\dsuff}$ for approximation of any desired $T\left[X, \frac{\probi{\usuff}{X}}{\probi{\dsuff}{X}} \right]$ from datasets {$X_i^{\usuff}$}<sub>$i$</sub> and {$X_i^{\dsuff}$}<sub>$i$</sub> (see Sections 3 and 5 of thesis for more details).
+		M^{\dsuff}\left[X,f_{\theta}(X)\right]$, containing both frequency and analytical components, adapt to each other till the point-wise *balance state* $F_{\theta}^{\usuff}(X) = F_{\theta}^{\dsuff}(X)$ is achieved. 
+
+		
+Such convergence causes the final model $f_{\theta}(X)$ to be a specific function of $\probi{\usuff}{X}$ and $\probi{\dsuff}{X}$, by satisfying PSO *balance state*:
+
+<p align="center">
+$
+\frac{\probi{\usuff}{X}}{\probi{\dsuff}{X}}
+=
+\frac{M^{\dsuff}\left[X,f_{\theta}(X)\right]}{M^{\usuff}\left[X,f_{\theta}(X)\right]}
+$
+,
+</p>
+
+and it can be used for inferring numerous statistical functions of arbitrary data. Particularly, PSO delivers exact tools to control *magnitude* functions $M^{\usuff}$ and $M^{\dsuff}$ for approximation of any desired $T\left[X, \frac{\probi{\usuff}{X}}{\probi{\dsuff}{X}} \right]$ from datasets {$X_i^{\usuff}$}<sub>$i$</sub> and {$X_i^{\dsuff}$}<sub>$i$</sub> (see Sections 3 and 5 of thesis for more details).
 
 
 ## Dynamics of Neural Tangent Kernel
